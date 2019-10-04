@@ -22,13 +22,13 @@ func NewGameEngine(repo *repositoryPosgress.MineSweeperPostgresRepo) *Minesweepe
 
 //function to create new Game
 func (GameEngine *MinesweeperGameEngine) NewBoardGame(rowNumber, colNumber, minesCount int, gameOwner string) (newGame *models.Game, err error) {
-
+	//newGame = &models.Game{}
 	if rowNumber < 6 && colNumber < 6 {
 		err = errors.New("RowNumber and ColNumber must be bigger than 3")
 		return
 	}
 	cellNumber := colNumber * rowNumber
-	cells := make(models.CellGrid, colNumber)
+	cells := make(models.CellGrid, cellNumber)
 
 	i := 0
 	for i < minesCount {
@@ -39,14 +39,18 @@ func (GameEngine *MinesweeperGameEngine) NewBoardGame(rowNumber, colNumber, mine
 		}
 	}
 	id := uuid.NewV4()
+
+
 	newGame = &models.Game{
 		GameId:   id.String(),
 		PlayerId: gameOwner,
 		Rows:     rowNumber,
 		Cols:     colNumber,
+		Mines:    minesCount,
 		Status:   models.STARTED,
 		Timer:    time.Now(),
 		Clicks:   0,
+		Duration: 0,
 	}
 
 	//now make slice to matrix
@@ -54,12 +58,14 @@ func (GameEngine *MinesweeperGameEngine) NewBoardGame(rowNumber, colNumber, mine
 	for row := range newGame.Grid {
 		newGame.Grid[row] = cells[(colNumber * row):(colNumber * (row + 1))]
 	}
+	initPotition(newGame)
 
 	err = GameEngine.Repository.NewGame(newGame)
 
 	if err != nil {
 		fmt.Printf("error creating new models: %s", err)
 		newGame = nil
+		return
 	}
 	cleanMinesForResponse(newGame)
 	return
@@ -105,6 +111,16 @@ func cleanMinesForResponse(game *models.Game) {
 	for y, col := range game.Grid {
 		for x, _ := range col{
 			game.Grid[x][y].Mine = false
+		}
+
+	}
+}
+
+func initPotition(game *models.Game) {
+	for y, col := range game.Grid {
+		for x, _ := range col{
+			game.Grid[x][y].RowValue = x
+			game.Grid[x][y].ColumnValue = y
 		}
 
 	}

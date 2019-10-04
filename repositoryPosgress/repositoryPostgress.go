@@ -2,6 +2,7 @@ package repositoryPosgress
 
 import (
 	"errors"
+	"fmt"
 	"github.com/go-pg/pg"
 	"minesweeper-API/models"
 )
@@ -11,7 +12,9 @@ type MineSweeperPostgresRepo struct {
 }
 
 func New() *MineSweeperPostgresRepo {
-	return &MineSweeperPostgresRepo{buildPgConnection()}
+	pgConnection := buildPgConnection()
+	pgConnection.AddQueryHook(dbLogger{})
+	return &MineSweeperPostgresRepo{pgConnection}
 }
 
 func (repo *MineSweeperPostgresRepo) UpdateGame(game *models.Game) error {
@@ -22,8 +25,7 @@ func (repo *MineSweeperPostgresRepo) NewGame(game *models.Game) error {
 }
 
 func (repo *MineSweeperPostgresRepo) NewPlayer(player *models.Player) error {
-	err := repo.Insert(player)
-	return player, err
+	 return repo.Insert(player)
 }
 
 func (repo *MineSweeperPostgresRepo) PauseGame(game *models.Game) (err error) {
@@ -36,4 +38,13 @@ func (repo *MineSweeperPostgresRepo) PauseGame(game *models.Game) (err error) {
 func (repo *MineSweeperPostgresRepo) GetGamesByPlayerId(playerId string) (games *[]models.Game, err error) {
 	err = repo.Model(games).Where("player_id = ?", playerId).Select(games)
 	return
+}
+
+type dbLogger struct{}
+func (d dbLogger) BeforeQuery(q *pg.QueryEvent) {
+	fmt.Println(q.Query)
+}
+
+func (d dbLogger) AfterQuery(q *pg.QueryEvent) {
+	fmt.Println(q.FormattedQuery())
 }

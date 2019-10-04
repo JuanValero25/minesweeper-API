@@ -1,7 +1,7 @@
 package gameService
 
 import (
-	uuid "github.com/satori/go.uuid"
+	"github.com/satori/go.uuid"
 	"minesweeper-API/models"
 )
 
