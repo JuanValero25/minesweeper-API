@@ -21,7 +21,7 @@ func (repo *MineSweeperPostgresRepo) NewGame(game *models.Game) error {
 	return repo.Insert(game)
 }
 
-func (repo *MineSweeperPostgresRepo) NewPlayer(player *models.Player) (*models.Player , error) {
+func (repo *MineSweeperPostgresRepo) NewPlayer(player *models.Player) error {
 	err := repo.Insert(player)
 	return player, err
 }
