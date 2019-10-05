@@ -40,7 +40,6 @@ func (GameEngine *MinesweeperGameEngine) NewBoardGame(rowNumber, colNumber, mine
 	}
 	id := uuid.NewV4()
 
-
 	newGame = &models.Game{
 		GameId:   id.String(),
 		PlayerId: gameOwner,
@@ -73,6 +72,16 @@ func (GameEngine *MinesweeperGameEngine) NewBoardGame(rowNumber, colNumber, mine
 
 // this function check if player win
 func (GameEngine *MinesweeperGameEngine) ClickCell(game *models.Game, i, j int) error {
+
+	currentGame, err := GameEngine.Repository.GetGameById(game.GameId)
+	if err != nil {
+		return errors.New("error geting current game")
+	}
+	game.Grid = currentGame.Grid
+	if !isValidRevealable(game, i, j) {
+		return errors.New("position out of the grid")
+	}
+
 	if game.Grid[i][j].Clicked {
 		return errors.New("cell already clicked")
 	}
@@ -84,7 +93,6 @@ func (GameEngine *MinesweeperGameEngine) ClickCell(game *models.Game, i, j int) 
 	if game.Status != models.STARTED {
 		return errors.New("game finish or paused")
 	}
-
 	game.Grid[i][j].Clicked = true
 	game.Clicks += 1
 	if game.Grid[i][j].Mine {
@@ -109,7 +117,7 @@ func checkIfWin(game *models.Game) bool {
 
 func cleanMinesForResponse(game *models.Game) {
 	for y, col := range game.Grid {
-		for x, _ := range col{
+		for x, _ := range col {
 			game.Grid[x][y].Mine = false
 		}
 
@@ -118,7 +126,7 @@ func cleanMinesForResponse(game *models.Game) {
 
 func initPotition(game *models.Game) {
 	for y, col := range game.Grid {
-		for x, _ := range col{
+		for x, _ := range col {
 			game.Grid[x][y].RowValue = x
 			game.Grid[x][y].ColumnValue = y
 		}
@@ -126,16 +134,19 @@ func initPotition(game *models.Game) {
 	}
 }
 
-func revealAdjacent(game *models.Game, x, y int){
-	for i := x-1 ; i <= x+1 ; i++ {
-		for j := y-1 ; j <= y+1 ; j++ {
-			if isValidRevealable( game, i, j) {
+func revealAdjacent(game *models.Game, x, y int) {
+	for i := x - 1; i <= x+1; i++ {
+		for j := y - 1; j <= y+1; j++ {
+			if isValidRevealable(game, i, j) {
+				fmt.Printf("points revealed  %d %d \n", i, j)
 				game.Grid[i][j].Clicked = true
 			}
-		}}
+		}
+	}
 
 }
-//this check 
+
+//this check
 func isValidRevealable(game *models.Game, x, y int) bool {
-	return (game.Cols <= y && y > 0) && (game.Rows <= x && x > 0) && !game.Grid[x][y].Mine
+	return (y <= game.Cols-1 && y > 0) && (x <= game.Rows-1 && x > 0) && !game.Grid[x][y].Mine
 }

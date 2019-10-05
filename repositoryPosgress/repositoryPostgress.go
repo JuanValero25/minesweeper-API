@@ -25,7 +25,13 @@ func (repo *MineSweeperPostgresRepo) NewGame(game *models.Game) error {
 }
 
 func (repo *MineSweeperPostgresRepo) NewPlayer(player *models.Player) error {
-	 return repo.Insert(player)
+	return repo.Insert(player)
+}
+
+func (repo *MineSweeperPostgresRepo) GetGameById(player string) (game *models.Game, err error) {
+	game = &models.Game{GameId: player}
+	err = repo.Select(game)
+	return
 }
 
 func (repo *MineSweeperPostgresRepo) PauseGame(game *models.Game) (err error) {
@@ -41,6 +47,7 @@ func (repo *MineSweeperPostgresRepo) GetGamesByPlayerId(playerId string) (games 
 }
 
 type dbLogger struct{}
+
 func (d dbLogger) BeforeQuery(q *pg.QueryEvent) {
 	fmt.Println(q.Query)
 }

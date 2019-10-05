@@ -13,14 +13,14 @@ func main() {
 
 	gameRouter := routes.GameRouter{
 		GameService: &gameService.GameService{
-			GameEngine:&gameService.MinesweeperGameEngine{Repository:repositoryPosgress.New()},
+			GameEngine: &gameService.MinesweeperGameEngine{Repository: repositoryPosgress.New()},
 		},
 	}
 	router := httprouter.New()
 
 	router.POST("/newPlayer", gameRouter.NewPlayer)
 	router.POST("/newGame", gameRouter.NewGame)
-	router.POST("/ClickGame", gameRouter.ClickGame)
+	router.POST("/clickGame", gameRouter.ClickGame)
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 }

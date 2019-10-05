@@ -26,7 +26,7 @@ const (
 )
 
 type Game struct {
-	GameId    string     `json:"gameId" sql:"gameId" sql:",pk"`
+	GameId    string     `json:"gameId" sql:"gameId,pk"`
 	PlayerId  string     `json:"playerId" sql:"playerId"`
 	Rows      int        `json:"rows"`
 	Cols      int        `json:"cols"`
@@ -34,7 +34,7 @@ type Game struct {
 	Status    Status     `json:"status"`
 	Grid      []CellGrid `json:"grid,omitempty"`
 	Clicks    int        `json:"-"`
-	Timer     time.Time  `json:"timer"`
+	Timer     time.Time  `json:"timer" pg:"type:timestamptz"`
 	Duration  int64      `json:"Duration"`
 	TableName struct{}   `sql:"game_mine"`
 }
@@ -48,8 +48,8 @@ type GameRequest struct {
 
 type GameClick struct {
 	Game      *Game `json:"game"`
-	PositionX int   `json:"PositionX"`
-	PositionY int   `json:"PositionY"`
+	PositionX int   `json:"positionX"`
+	PositionY int   `json:"positionY"`
 }
 
 type Player struct {
