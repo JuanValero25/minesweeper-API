@@ -25,6 +25,10 @@ func (gameService *GameService) PauseGame(gameId string) error {
 	return gameService.GameEngine.Repository.PauseGame(gameToPause)
 }
 
+func (gameService *GameService) GetGamesByPlayerId(gameId string) (*[]models.Game , error ) {
+	return gameService.GameEngine.Repository.GetGamesByPlayerId(gameId)
+}
+
 func (gameService *GameService) NewPlayer(player *models.Player) (err error) {
 	id := uuid.NewV4()
 	player.Id = id.String()

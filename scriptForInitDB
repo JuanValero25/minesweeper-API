@@ -1,0 +1,35 @@
+create table if not exists player
+(
+	id uuid not null,
+	username varchar(50) not null
+);
+
+alter table player owner to postgres;
+
+create unique index if not exists "PK_player"
+	on player (id);
+
+create table if not exists game_mine
+(
+	"gameId" uuid not null,
+	rows numeric not null,
+	cols numeric not null,
+	mines numeric not null,
+	status varchar(50) not null,
+	"playerId" uuid not null
+		constraint "FK_40"
+			references player (id),
+	grid jsonb not null,
+	clicks numeric,
+	timer timestamp with time zone not null,
+	duration numeric
+);
+
+alter table game_mine owner to postgres;
+
+create unique index if not exists "PK_game_mine"
+	on game_mine ("gameId");
+
+create index if not exists "fkIdx_40"
+	on game_mine ("playerId");
+

@@ -90,3 +90,19 @@ func (router *GameRouter) PauseGame(w http.ResponseWriter, r *http.Request, para
 	}
 
 }
+
+func (router *GameRouter) GetGamesByPlayerId(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+	playerId := params.ByName("playerId")
+	games, err := router.GameService.GetGamesByPlayerId(playerId)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, err.Error(), 400)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(games)
+	if err != nil {
+		fmt.Println("error printing response ")
+	}
+
+}
