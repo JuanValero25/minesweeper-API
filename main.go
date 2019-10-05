@@ -21,6 +21,7 @@ func main() {
 	router.POST("/newPlayer", gameRouter.NewPlayer)
 	router.POST("/newGame", gameRouter.NewGame)
 	router.POST("/clickGame", gameRouter.ClickGame)
+	router.POST("/pauseGame/:gameId", gameRouter.PauseGame)
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 }

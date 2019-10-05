@@ -73,7 +73,7 @@ func (router *GameRouter) ClickGame(w http.ResponseWriter, r *http.Request, _ ht
 
 }
 
-func (router *GameRouter) PauseGasme(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+func (router *GameRouter) PauseGame(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
 
 	gameId := params.ByName("gameId")
 
