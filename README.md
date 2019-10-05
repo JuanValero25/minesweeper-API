@@ -27,7 +27,7 @@ use go modules to easy manage dependencies
 docker run --name postgresql -e POSTGRES_PASSWORD=rootpass -v my_dbdata:/var/lib/postgresql/data -p 5432:5432 -d postgres:11
 ```
 
-##Post Routes
+## Post Routes
 
 	"http://localhost:8080/newPlayer"
 	"http://localhost:8080/newGame"
@@ -35,7 +35,7 @@ docker run --name postgresql -e POSTGRES_PASSWORD=rootpass -v my_dbdata:/var/lib
     "http://localhost:8080/pauseGame/:gameId"
     
     
-##Post ClickGame example body
+## Post ClickGame example body
     
     {
       "game": {
@@ -53,7 +53,7 @@ docker run --name postgresql -e POSTGRES_PASSWORD=rootpass -v my_dbdata:/var/lib
       "positiony": 5
     }
  
-##Post NewGame example body 
+## Post NewGame example body 
     {
     "playerId": "b36bfd67-a379-40f8-ae2a-5949d0ac8c20",
     "rows":6,
@@ -61,12 +61,12 @@ docker run --name postgresql -e POSTGRES_PASSWORD=rootpass -v my_dbdata:/var/lib
     "mines":6
     }
 
-##Post NewPlayer example body
+## Post NewPlayer example body
     {
       "userName": "FancyPlayerName"
     }
     
-##Post NewGame example  
+## Post NewGame example  
 
     http://localhost:8080/pauseGame/aa362a01-23c1-43ab-8589-bdb9ebbcba42
 
